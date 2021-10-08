@@ -114,19 +114,17 @@ public class Questions {
     // keep in mind for this algorithm to work, array HAS to be sorted
     public static int binarySearch(int[] input, int target) {
         // look for the index of target in input
-        int low = 0;
-        int high = input.length - 1;
-        while (low < high) {
-            int mid = (low + high) / 2;
-            if (input[mid] == target) { // middle element is the target. Success!!!
-                return mid;
-            } else if (input[mid] > target) { // middle element is greater than the target
-                low = mid + 1;
-            } else { // middle element is smaller than the target
-                high = mid - 1;
+        int low = -1;
+        int high = input.length;
+        if (high == 0) {
+            return low;
+        }
+        else for (int i = 0; i < high; i++) {
+            if (input[i] == target) {
+                low = i;
             }
         }
-        return -1; // element is not found
+        return low; // element is not found
     }
     
     // Task 8
@@ -137,13 +135,18 @@ public class Questions {
 
         input = input.toLowerCase(); // ensuring string is lower case
         int[] alphabetTemplate = new int[26];
+        int chr = 'a';
         for (int i = 0; i < input.length(); i++) {// iterate over the string
-            int index = input.charAt(i) - 'a'; // Math in ASCII tables.
-            alphabetTemplate[index] += 1;
+            if (input.charAt(i) != ' ') {
+                int index = input.charAt(i) - chr; // Math in ASCII tables.
+                alphabetTemplate[index] += 1;
+            } else {
+                continue;
+            }
         }
         int counter = 0;
         for (int i = 0; i < alphabetTemplate.length; i++) {
-            if (alphabetTemplate[i] > 0) {
+            if (alphabetTemplate[i] > 1) {
                 counter = counter + 1;
             }
         }
@@ -154,43 +157,48 @@ public class Questions {
     public static int sumBetween193(int[] input) {
         // Sum up numbers between the first 193 and the next 193 non-inclusive
         int sum = 0;
+        int count1 = -1;
+        int count2 = -1;
         boolean startCounting = false;
         for (int i = 0; i < input.length; i++) {
-            if (startCounting) {
-                sum = sum * input[i];
-                if (input[i] == 193) {
-                    startCounting = false;
-                    break;
-                }
-            } else {
-                if(input[i] == 193) {
-                    startCounting = true;
-                }
+            if (input[i] == 193) {
+                count1 = i;
+                break;
             }
+        }
+        for (int i = count1 + 1; i < input.length; i++ ) {
+            if (input[i] == 193) {
+                count2 = i;
+                break;
+            }
+        }
+        for (int i = count1 + 1; i < count2; i++) {
+            sum += input[i];
         }
         return sum;
     }
 
     // Task 10
     public static boolean findSubstring(String theBigOne, String sub) {
-        // checks to see if variable sub appears in theBigOne
-        // highly recommended to write this one out on a notebook
         int counter = 0;
-        for (int i = 1; i < theBigOne.length(); i++) {
+        if (sub.length() > theBigOne.length()) {
+            return false;
+        }
+        else for (int i = 0; i < theBigOne.length(); i++) {
+            counter = 0;
             if (theBigOne.charAt(i) == sub.charAt(0)) {
-                for (int j = 1; j < theBigOne.length(); j++) {
+                counter++;
+                for (int j = 1; j < sub.length(); j++) {
                     if (theBigOne.charAt(j) == sub.charAt(j - i)) {
-                        counter += 1;
-                    } else { // a character didn't match so break
+                        counter++;
+                    } else {
                         break;
-                    }
-                    if (counter == sub.length()) {
+                    } if (counter == sub.length()) {
                         return true;
                     }
                 }
             }
-        }
-        return true;
+        } return false;
     }
     // Main method is used for testing purposes
     public static void main(String[] args) {
